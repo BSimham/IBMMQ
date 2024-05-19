@@ -1,0 +1,77 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/libs-release-local"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/libs-snapshot-local"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/jcenter"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/jcenter-cache"
+        }
+         maven {
+    url "https://plugins.gradle.org/m2/"
+}
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:3.2.5")
+    }
+    }
+
+
+plugins {
+	id 'java'
+	id 'eclipse'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+	id 'war'
+}
+
+group = 'com.verizon.delphi.mq'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/libs-release-local"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/libs-snapshot-local"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/jcenter"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/jcenter-cache"
+        }
+         maven {
+    url "https://plugins.gradle.org/m2/"
+    }
+    maven {
+        url 'https://oneartifactoryprod.verizon.com/DELB_DELPHI'      
+    }
+    }
+
+dependencies {
+	//implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	// https://mvnrepository.com/artifact/com.ibm.mq/mq-jms-spring-boot-starter
+	implementation 'com.ibm.mq:mq-jms-spring-boot-starter:3.2.4'
+	// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:r05'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/libs-release-local"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/libs-snapshot-local"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/jcenter"
+        }
+        maven {
+            url "https://oneartifactoryprod.verizon.com/artifactory/jcenter-cache"
+        }
+    }
+}
+
+rootProject.name = 'MQProxy'
