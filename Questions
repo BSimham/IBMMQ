@@ -1,0 +1,85 @@
+1: Implement a custom functional interface that takes two parameters and returns a boolean value. Then, write a method that takes this functional interface as a parameter and uses it to filter a list of objects
+Define a custom functional interface:
+java
+@FunctionalInterface
+public interface BiPredicate<T, U> {
+    boolean test(T t, U u);
+}
+
+Write a method that takes the functional interface as a parameter and uses it to filter a list:
+list:
+java
+public static <T, U> List<T> filterList(List<T> list, BiPredicate<T, U> predicate, U param) {
+    return list.stream()
+            .filter(item -> predicate.test(item, param))
+            .collect(Collectors.toList());
+}
+
+Example usage:
+java
+List<Person> people = Arrays.asList(
+    new Person("John", 30),
+    new Person("Jane", 25),
+    new Person("Bob", 40)
+);
+
+BiPredicate<Person, Integer> ageFilter = (person, age) -> person.getAge() > age;
+List<Person> olderThan30 = filterList(people, ageFilter, 30);
+
+
+Question 3: Write a method that takes a list of strings and returns a new list of strings where each string is the reverse of the original string, but only if the original string is a palindrome.
+Answer:
+java
+public static List<String> reversePalindromes(List<String> strings) {
+    return strings.stream()
+        .filter(StringUtils::isPalindrome)
+        .map(StringUtils::reverse)
+        .collect(Collectors.toList());
+}
+
+public static boolean isPalindrome(String s) {
+    return s.equals(StringUtils.reverse(s));
+}
+
+public static String reverse(String s) {
+    return new StringBuilder(s).reverse().toString();
+}
+
+Example usage:
+java
+List<String> words = Arrays.asList("racecar", "level", "hello", "radar");
+List<String> reversedPalindromes = reversePalindromes(words);
+System.out.println(reversedPalindromes)
+
+
+Question 16: Implement a custom stream collector that takes a list of objects and returns a map where the keys are the unique values of a specific field, and the values are lists of objects that have that value for the field.
+Answer:
+Define a custom collector:
+java
+public static <T, K> Collector<T, ?, Map<K, List<T>>> groupingByToList(Function<? super T, ? extends K> classifier) {
+    return Collectors.toMap(
+        classifier,
+        ArrayList::new,
+        (list1, list2) -> {
+            list1.addAll(list2);
+            return list1;
+        },
+        LinkedHashMap::new
+    );
+}
+
+Example usage:
+java
+List<Person> people = Arrays.asList(
+    new Person("John", 30, 1000.0),
+    new Person("Jane", 25, 500.0),
+    new Person("Bob", 40, 2000.0),
+    new Person("Alice", 35, 1500.0),
+    new Person("Tom", 30, 800.0),
+    new Person("Emily", 25, 600.0)
+);
+
+Map<Integer, List<Person>> peopleByAge = people.stream()
+    .collect(groupingByToList(Person::getAge));
+
+System.out.println(peopleByAge); // 
