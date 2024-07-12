@@ -83,3 +83,42 @@ Map<Integer, List<Person>> peopleByAge = people.stream()
     .collect(groupingByToList(Person::getAge));
 
 System.out.println(peopleByAge); // 
+
+Question 22: Implement a custom stream collector that takes a list of objects and returns a map where the keys are the unique values of a specific field, and the values are the top N objects ordered by a combination of two fields, using a custom comparator.
+Answer:
+Define a custom collector:
+java
+public static <T, K> Collector<T, ?, Map<K, List<T>>> groupingByAndTopNWithMultipleComparatorsAndCustom(Function<? super T, ? extends K> classifier, Function<? super T, ? extends Comparable<? super T>> sortFunction1, Function<? super T, ? extends Comparable<? super T>> sortFunction2, Comparator<? super T> comparator, int n) {
+    return Collectors.toMap(
+        classifier,
+        t -> new ArrayList<>(),
+        (list1, list2) -> {
+            list1.addAll(list2);
+            list1.sort(comparator.thenComparing(Comparator.comparing(sortFunction1).thenComparing(sortFunction2).reversed()));
+            if (list1.size() > n) {
+                list1.subList(n, list1.size()).clear();
+            }
+            return list1;
+        },
+        LinkedHashMap::new
+    );
+}
+
+Example usage:
+java
+List<Person> people = Arrays.asList(
+    new Person("John", 30, 1000.0),
+    new Person("Jane", 25, 500.0),
+    new Person("Bob", 40, 2000.0),
+    new Person("Alice", 35, 1500.0),
+    new Person("Tom", 30, 800.0),
+    new Person("Emily", 25, 600.0)
+);
+
+Comparator<Person> ageComparator = Comparator.comparing(Person::getAge);
+Comparator<Person> salaryComparator = Comparator.comparing(Person::getSalary).reversed();
+
+Map<Integer, List<Person>> topSalariesByAge = people.stream()
+    .collect(groupingByAndTopNWithMultipleComparatorsAndCustom(Person::getAge, Person::getSalary, Person::getName, ageComparator.thenComparing(salaryComparator), 2));
+
+System.out.println(topSalariesByAge); //
